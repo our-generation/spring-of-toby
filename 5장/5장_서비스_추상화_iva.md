@@ -74,9 +74,9 @@ DB에 변경이 일어나는 작업일 경우, 중단되기 전까지의 작업�
 public void upgradeLevels() {
   List<User> users = userDao.getAll();			// 1. dao 단의 getAll() 메서드
   for(User user : users) {
-    if (canUpgradeLevel(user)) {						// 2. user 도메인을 이용한 로직이 있는 메서드
-      upgradeLevel(user);										// 3. dao 단의 update() 메서드와 user 도메인 로직이
-    }																				// 		있는 메서드를 품고 있는 메서드
+    if (canUpgradeLevel(user)) {			// 2. user 도메인을 이용한 로직이 있는 메서드
+      upgradeLevel(user);				// 3. dao 단의 update() 메서드와 user 도메인 로직이
+    }							// 	있는 메서드를 품고 있는 메서드
   }
 }
 ```
@@ -92,8 +92,8 @@ public void upgradeLevels() {
 ```java
 private void upgradeLevel(User user) {
   user.upgradeLevel();
-  userDao.update(user);									// upgradeLevels() 메서드에서 이 메서드가 n번 호출될 때
-}																				// 각각 Connection 객체가 n번이 새롭게 생성된다.
+  userDao.update(user);				// upgradeLevels() 메서드에서 이 메서드가 n번 호출될 때
+}						// 각각 Connection 객체가 n번이 새롭게 생성된다.
 ```
 
 이를 하나의 트랜잭션으로 묶기 위해서는 n번 수행되는 `userDao.update(user)`가 하나의 `Connention` 객체를 공유하도록 하면 된다. (트랜잭션 동기화)
@@ -153,9 +153,9 @@ public interface PlatformTransactionManager {
 ```java
 @EnableTransactionManagement
 public class ApplicationConfig {
-  ...
-  @Bean
- 	public PlatformTransactionManager transactionManager(DataSource dataSource) throws URISyntaxException, GenericSecurityException, ParseException, IOException {
+    ...
+    @Bean
+    public PlatformTransactionManager transactionManager(DataSource dataSource) throws URISyntaxException, GenericSecurityException, ParseException, IOException {
     
     /* PlatFormTransactionManager에 DataSourceTransactionManager로 넣어줄 때 */
     return new DataSourceTransactionManager(dataSource);
@@ -176,12 +176,11 @@ public class UserService {
   
   DefaultTransactionDefinition def = new DefaultTransactionDefinition();
 
-	TransactionStatus status = txManager.getTransaction(def);
+  TransactionStatus status = txManager.getTransaction(def);
   
-	try {
+  try {
     // 이전 로직과 동일
-	}
-  catch (Exception ex) {
+  } catch (Exception ex) {
       txManager.rollback(status);
       throw ex;
   }
